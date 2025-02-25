@@ -1,0 +1,42 @@
+{
+	"schemaVersion": 1,
+	"id": "fishonmcextras",
+	"version": "0.1.0",
+	"name": "FishOnMC-Extras",
+	"description": "A QOL mod for play.fishonmc.net.",
+	"authors": [
+		"MarkassK"
+	],
+	"contributors": [
+		"ItsMeDjeff"
+	],
+	"contact": {
+		"discord": "markask",
+		"sources": "https://github.com/MarkassK/FishOnMC-Extras"
+	},
+	"license": "GPL-3.0",
+	"icon": "assets/fishonmcextras/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"io.github.markassk.fishonmcextras.FishOnMCExtras"
+		],
+		"client":[
+			"io.github.markassk.fishonmcextras.FishOnMCExtrasClient"
+		],
+		"modmenu": [
+			"io.github.markassk.fishonmcextras.config.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"fishonmcextras.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"minecraft": ">=1.21 <=1.21.3",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cloth-config": ">=11.1.118",
+		"modmenu" : ">=10.0.0"
+	}
+}
