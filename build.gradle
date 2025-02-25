@@ -28,6 +28,10 @@ dependencies {
 }
 
 processResources {
+	from("LICENSE"){
+		into "META-INF"
+	}
+	from("README.md")
 	inputs.property "version", project.version
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
