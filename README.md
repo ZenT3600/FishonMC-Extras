@@ -36,6 +36,15 @@ Access config screen via:
 2. `O` Default Key
 
 
+## 🏗️ Future Features
+- Tracking of specific fish types
+- Shards tracking
+- Inventory getting full, 3 slot warning
+- Event timer
+- /foe drystreak
+- Quest HUD
+
+
 ## License
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0-only)**.  
 See [LICENSE](LICENSE) for full terms.
