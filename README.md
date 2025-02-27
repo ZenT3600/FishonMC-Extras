@@ -17,7 +17,7 @@ A Minecraft mod that enhances your experience on FishOnMC with advanced tracking
     - Rarity/size distribution charts
 - Auto-pause timer after inactivity
 - Active pet / No pet Warning
-- /foe chat command
+- "/foe" chat command
 
 ## ⚙️ Installation
 1. **Install Fabric Loader** for your Minecraft version
@@ -36,13 +36,22 @@ Access config screen via:
 2. `O` Default Key
 
 
-## 🏗️ Future Features
-- Tracking of specific fish types
-- Shards tracking
+## 🏗️ Future Features (NO ORDER)
+- Tracking of specific fish types in fish HUD
+- Make Fish HUD stats groups moveable individually
+- Show juvi and baby in fish HUD
+- More toggles
+
+- Shards tracking (with hourly rate)
+- Quest HUD (Tracker for rewards & completions, No quest Warning)
+- Crew Quest HUD (Maybe)
 - Inventory getting full, 3 slot warning
 - Event timer
-- /foe drystreak
-- Quest HUD
+- /foe drystreak (shows fish since variant)
+- popup screen for variants
+- pet level and xp tracker
+- Moveable scoreboard replacement
+- Right Allignmnet
 
 
 ## License
