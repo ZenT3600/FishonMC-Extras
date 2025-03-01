@@ -46,15 +46,17 @@ public class TooltipPetRating {
             float multiplier = getRarityMultiplier(textList.get(2).getString());
             float total = Stream.of(petClimateLuck, petClimateScale, petLocationLuck, petLocationScale).mapToInt(Integer::parseInt).sum();
 
-            String json = textToJson(textList.get(16));
-            StringBuilder builder = new StringBuilder(json);
-            float rating = clampRarity(total / multiplier, json);
-            String newJson = builder.insert(ordinalIndexOf(json, "\",\"italic\"", 2)," (" + String.format("%.0f", rating) + "%)").toString();
-            Text petRatingLine = TextCodecs.CODEC
-                    .decode(JsonOps.INSTANCE, gson.fromJson(newJson, JsonElement.class))
-                    .getOrThrow()
-                    .getFirst();
+            Text petClimateLuckLine = appendRating(textList.get(9), Float.parseFloat(petClimateLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+            Text petClimateScaleLine = appendRating(textList.get(10), Float.parseFloat(petClimateScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+            Text petLocationLuckLine = appendRating(textList.get(13), Float.parseFloat(petLocationLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+            Text petLocationScaleLine = appendRating(textList.get(14), Float.parseFloat(petLocationScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+            Text petRatingLine = appendRating(textList.get(16), total, multiplier, 1, "\",\"italic\"", 2, textToJson(textList.get(16)), true);
 
+
+            textList.set(9, petClimateLuckLine);
+            textList.set(10, petClimateScaleLine);
+            textList.set(13, petLocationLuckLine);
+            textList.set(14, petLocationScaleLine);
             textList.set(16, petRatingLine);
         }
         return textList;
@@ -71,16 +73,29 @@ public class TooltipPetRating {
             float multiplier = getRarityMultiplier(lines[1]);
             float total = Stream.of(petClimateLuck, petClimateScale, petLocationLuck, petLocationScale).mapToInt(Integer::parseInt).sum();
 
-            String json = textToJson(textLine);
-            StringBuilder builder = new StringBuilder(json);
-            float rating = clampRarity(total / multiplier, json);
-            String newJson = builder.insert(ordinalIndexOf(json, "\\n", 16), " (" + String.format("%.0f", rating) + "%)").toString();
-            return TextCodecs.CODEC
-                    .decode(JsonOps.INSTANCE, gson.fromJson(newJson, JsonElement.class))
-                    .getOrThrow()
-                    .getFirst();
+            Text petRatingLine = textLine.copy();
+
+            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateLuck), multiplier, 4, "\\n", 9, textToJson(textLine), false);
+            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateScale), multiplier, 4, "\\n", 10, textToJson(textLine), false);
+            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationLuck), multiplier, 4, "\\n", 13, textToJson(textLine), false);
+            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationScale), multiplier, 4, "\\n", 14, textToJson(textLine), false);
+            petRatingLine = appendRating(petRatingLine, total, multiplier, 1, "\\n", 16, textToJson(textLine), true);
+
+            return petRatingLine;
         }
         return textLine;
+    }
+
+    private static Text appendRating(Text line, float rating, float rarityMultiplier, float extraMultiplier, String substr, int occurrence, String rarity, boolean clamp) {
+        String json = textToJson(line);
+        StringBuilder builder = new StringBuilder(json);
+        float ratingPercentage = clamp ? clampRarity(rating * extraMultiplier / rarityMultiplier, rarity) : rating * extraMultiplier / rarityMultiplier;
+        String newJson = builder.insert(ordinalIndexOf(json, substr, occurrence), " (" + String.format("%.0f", ratingPercentage) + "%)").toString();
+
+        return TextCodecs.CODEC
+                .decode(JsonOps.INSTANCE, gson.fromJson(newJson, JsonElement.class))
+                .getOrThrow()
+                .getFirst();
     }
 
     private static int ordinalIndexOf(String str, String substr, int n) {
