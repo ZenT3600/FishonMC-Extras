@@ -3,6 +3,7 @@ package io.github.markassk.fishonmcextras.common;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 
@@ -37,6 +38,7 @@ public class TooltipPetRating {
     }
 
     public static List<Text> appendTooltipRating(List<Text> textList) {
+        FishOnMCExtrasConfig config = FishOnMCExtrasConfig.getConfig();
         if(textList.size() >= 3 && textList.get(1).getString().contains(" Pet") && textList.get(3).getString().contains(" ᴘᴇᴛ")) {
             String petClimateLuck = getMaxFromString(textList.get(9).copy().getString());
             String petClimateScale = getMaxFromString(textList.get(10).copy().getString());
@@ -46,23 +48,29 @@ public class TooltipPetRating {
             float multiplier = getRarityMultiplier(textList.get(2).getString());
             float total = Stream.of(petClimateLuck, petClimateScale, petLocationLuck, petLocationScale).mapToInt(Integer::parseInt).sum();
 
-            Text petClimateLuckLine = appendRating(textList.get(9), Float.parseFloat(petClimateLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-            Text petClimateScaleLine = appendRating(textList.get(10), Float.parseFloat(petClimateScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-            Text petLocationLuckLine = appendRating(textList.get(13), Float.parseFloat(petLocationLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-            Text petLocationScaleLine = appendRating(textList.get(14), Float.parseFloat(petLocationScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-            Text petRatingLine = appendRating(textList.get(16), total, multiplier, 1, "\",\"italic\"", 2, textToJson(textList.get(16)), true);
+            if (config.petTooltipToggles.showIndividualRating) {
+                Text petClimateLuckLine = appendRating(textList.get(9), Float.parseFloat(petClimateLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+                Text petClimateScaleLine = appendRating(textList.get(10), Float.parseFloat(petClimateScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+                Text petLocationLuckLine = appendRating(textList.get(13), Float.parseFloat(petLocationLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+                Text petLocationScaleLine = appendRating(textList.get(14), Float.parseFloat(petLocationScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
 
+                textList.set(9, petClimateLuckLine);
+                textList.set(10, petClimateScaleLine);
+                textList.set(13, petLocationLuckLine);
+                textList.set(14, petLocationScaleLine);
+            }
 
-            textList.set(9, petClimateLuckLine);
-            textList.set(10, petClimateScaleLine);
-            textList.set(13, petLocationLuckLine);
-            textList.set(14, petLocationScaleLine);
-            textList.set(16, petRatingLine);
+            if (config.petTooltipToggles.showFullRating) {
+                Text petRatingLine = appendRating(textList.get(16), total, multiplier, 1, "\",\"italic\"", 2, textToJson(textList.get(16)), true);
+
+                textList.set(16, petRatingLine);
+            }
         }
         return textList;
     }
 
     public static Text appendTooltipRating(Text textLine) {
+        FishOnMCExtrasConfig config = FishOnMCExtrasConfig.getConfig();
         String[] lines = textLine.getString().split("\\r?\\n");
         if(lines.length >= 3 && lines[0].contains(" Pet") && lines[2].contains(" ᴘᴇᴛ")) {
             String petClimateLuck = getMaxFromString(lines[8]);
@@ -75,12 +83,16 @@ public class TooltipPetRating {
 
             Text petRatingLine = textLine.copy();
 
-            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateLuck), multiplier, 4, "\\n", 9, textToJson(textLine), false);
-            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateScale), multiplier, 4, "\\n", 10, textToJson(textLine), false);
-            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationLuck), multiplier, 4, "\\n", 13, textToJson(textLine), false);
-            petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationScale), multiplier, 4, "\\n", 14, textToJson(textLine), false);
-            petRatingLine = appendRating(petRatingLine, total, multiplier, 1, "\\n", 16, textToJson(textLine), true);
+            if (config.petTooltipToggles.showIndividualRating) {
+                petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateLuck), multiplier, 4, "\\n", 9, textToJson(textLine), false);
+                petRatingLine = appendRating(petRatingLine, Float.parseFloat(petClimateScale), multiplier, 4, "\\n", 10, textToJson(textLine), false);
+                petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationLuck), multiplier, 4, "\\n", 13, textToJson(textLine), false);
+                petRatingLine = appendRating(petRatingLine, Float.parseFloat(petLocationScale), multiplier, 4, "\\n", 14, textToJson(textLine), false);
+            }
 
+            if (config.petTooltipToggles.showFullRating) {
+                petRatingLine = appendRating(petRatingLine, total, multiplier, 1, "\\n", 16, textToJson(textLine), true);
+            }
             return petRatingLine;
         }
         return textLine;

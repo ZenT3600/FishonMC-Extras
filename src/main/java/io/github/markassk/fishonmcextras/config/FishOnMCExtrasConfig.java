@@ -31,6 +31,13 @@ public class FishOnMCExtrasConfig implements ConfigData {
     public boolean petHUD = true;
 
 
+    // Pet Tooltip Options
+    @ConfigEntry.Gui.PrefixText
+    @ConfigEntry.Category(value = "general")
+    @ConfigEntry.Gui.CollapsibleObject
+    public PetTooltipToggles petTooltipToggles = new PetTooltipToggles();
+
+
     // ----------- HUD Styling -----------
     @ConfigEntry.Category(value = "textStyling")
     @ConfigEntry.Gui.CollapsibleObject
@@ -43,7 +50,6 @@ public class FishOnMCExtrasConfig implements ConfigData {
     @ConfigEntry.Category(value = "textStyling")
     @ConfigEntry.Gui.CollapsibleObject
     public PetActiveHUDConfig petActiveHUDConfig = new PetActiveHUDConfig();
-
 
 
 
@@ -84,6 +90,13 @@ public class FishOnMCExtrasConfig implements ConfigData {
         @ConfigEntry.Gui.Tooltip(count = 2)
         public boolean showUnique = false;
 
+    }
+
+    public static class PetTooltipToggles {
+        @ConfigEntry.Gui.Tooltip()
+        public boolean showFullRating = true;
+        @ConfigEntry.Gui.Tooltip()
+        public boolean showIndividualRating = true;
     }
 
     public static class PetWarningHUDConfig{

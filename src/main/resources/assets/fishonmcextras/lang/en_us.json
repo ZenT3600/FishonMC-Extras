@@ -25,6 +25,13 @@
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showFishPerHour.@Tooltip[0]": "Enable or disable the display for Fish/Hour.",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showFishPerHour.@Tooltip[1]": "This affects the HUD display.",
 
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles.@PrefixText" : "Pet Tooltip Options:",
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles": "Pet Tooltip Toggles",
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles.showFullRating": "Show pet percentage rating",
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles.showFullRating.@Tooltip": "Enable or disable the percentage for pet ratings.",
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles.showIndividualRating": "Show individual pet stats percentage rating",
+  "text.autoconfig.fishonmcextras.option.petTooltipToggles.showIndividualRating.@Tooltip": "Enable or disable the percentage for individual pet stats rating.",
+
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showRarities.@PrefixText" : "Rarity & Size Options:",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showRarities": "Show Rarities",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showRarities.@Tooltip[0]": "Enable or disable the display for amount of rarities.",
