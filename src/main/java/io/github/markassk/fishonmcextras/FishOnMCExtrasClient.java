@@ -57,9 +57,7 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ScreenEvents.BEFORE_INIT.register(this::onScreenOpen);
 
-        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
-            lines = TooltipPetRating.appendTooltipRating(lines);
-        });
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> lines = TooltipPetRating.appendTooltipRating(lines));
 
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> TooltipPetRating.appendTooltipRating(message));
     }
