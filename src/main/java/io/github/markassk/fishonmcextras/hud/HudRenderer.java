@@ -3,6 +3,7 @@ package io.github.markassk.fishonmcextras.hud;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
+import io.github.markassk.fishonmcextras.common.overlay.LookTickHandler;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
@@ -443,6 +444,12 @@ public class HudRenderer implements HudRenderCallback {
                             scaledYHolder[0] += lineHeight;
 
                         }
+                    }
+                }
+
+                if (config.otherHUDToggles.showItemFrameTooltip) {
+                    if(LookTickHandler.instance().targetedItem != null) {
+                        drawContext.drawItemTooltip(textRenderer, LookTickHandler.instance().targetedItem, (screenWidth / 2) + 110, screenHeight / 2);
                     }
                 }
             }finally { // Guaranteed to execute even if exceptions occur

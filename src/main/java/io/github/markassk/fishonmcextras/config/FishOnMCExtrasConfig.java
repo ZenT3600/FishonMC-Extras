@@ -23,6 +23,10 @@ public class FishOnMCExtrasConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public FishHUDToggles fishHUDToggles = new FishHUDToggles();
 
+    @ConfigEntry.Category(value = "general")
+    @ConfigEntry.Gui.CollapsibleObject
+    public OtherHUDToggles otherHUDToggles = new OtherHUDToggles();
+
 
     // Pet HUD Options
     @ConfigEntry.Gui.PrefixText
@@ -90,6 +94,11 @@ public class FishOnMCExtrasConfig implements ConfigData {
         @ConfigEntry.Gui.Tooltip(count = 2)
         public boolean showUnique = false;
 
+    }
+
+    public static class OtherHUDToggles {
+        @ConfigEntry.Gui.Tooltip()
+        public boolean showItemFrameTooltip = true;
     }
 
     public static class PetTooltipToggles {
