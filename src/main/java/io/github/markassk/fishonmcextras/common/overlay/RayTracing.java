@@ -36,7 +36,6 @@ public class RayTracing {
         }
 
         double blockReach = viewPlayer.getBlockInteractionRange();
-        double entityReach = viewPlayer.getEntityInteractionRange();
         target = rayTrace(viewEntity, blockReach);
     }
 
@@ -61,27 +60,27 @@ public class RayTracing {
         if (target.isRemoved()) {
             return false;
         }
+
         if (target.isSpectator()) {
             return false;
         }
+
         if (target == viewEntity.getVehicle()) {
             return false;
         }
+
         if (target instanceof ProjectileEntity && !target.getWorld().getTickManager().isFrozen()) {
             return false;
         }
+
         if (viewEntity instanceof PlayerEntity player) {
             if (target.isInvisibleTo(player)) {
                 return false;
             }
-            if (client.interactionManager.isBreakingBlock() && target.getType() == EntityType.ITEM) {
-                return false;
-            }
+            assert client.interactionManager != null;
+            return !client.interactionManager.isBreakingBlock() || target.getType() != EntityType.ITEM;
         } else {
-            if (target.isInvisible()) {
-                return false;
-            }
+            return !target.isInvisible();
         }
-        return true;
     }
 }
