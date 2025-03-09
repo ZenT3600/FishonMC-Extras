@@ -2,6 +2,7 @@ package io.github.markassk.fishonmcextras;
 
 import io.github.markassk.fishonmcextras.commands.CommandRegistration;
 import io.github.markassk.fishonmcextras.common.Tooltip.TooltipPetRating;
+import io.github.markassk.fishonmcextras.common.overlay.LookTickHandler;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.hud.HudRenderer;
 import io.github.markassk.fishonmcextras.trackers.FishTracker;
@@ -64,6 +65,7 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
 
     private void onClientTick(MinecraftClient client) {
         fishTracker.tick(client, menuOpened, lastMenuCloseTime);
+        LookTickHandler.instance().tickClient();
     }
 
     // Corrected method signature
