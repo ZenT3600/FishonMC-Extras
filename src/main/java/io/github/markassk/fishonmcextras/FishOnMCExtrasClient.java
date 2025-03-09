@@ -2,7 +2,8 @@ package io.github.markassk.fishonmcextras;
 
 import io.github.markassk.fishonmcextras.commands.CommandRegistration;
 import io.github.markassk.fishonmcextras.common.Tooltip.TooltipPetRating;
-import io.github.markassk.fishonmcextras.common.overlay.LookTickHandler;
+import io.github.markassk.fishonmcextras.common.handler.LookTickHandler;
+import io.github.markassk.fishonmcextras.common.screen.PetMergeCalculatorScreen;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.hud.HudRenderer;
 import io.github.markassk.fishonmcextras.trackers.FishTracker;
@@ -16,13 +17,20 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Objects;
 
 public class FishOnMCExtrasClient implements ClientModInitializer {
     public static FishOnMCExtrasConfig CONFIG;
@@ -56,7 +64,8 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
 
         ClientPlayConnectionEvents.JOIN.register(this::onServerJoin);
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-        ScreenEvents.BEFORE_INIT.register(this::onScreenOpen);
+        ScreenEvents.BEFORE_INIT.register(this::beforeScreenOpen);
+        ScreenEvents.AFTER_INIT.register(this::afterScreenOpen);
 
         ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> lines = TooltipPetRating.appendTooltipRating(lines));
 
@@ -74,13 +83,32 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
         client.execute(() -> fishTracker.updateWorldContext(client));
     }
 
-    private void onScreenOpen(
+    private void afterScreenOpen(
             MinecraftClient client,
-            net.minecraft.client.gui.screen.Screen screen,
+            Screen screen,
+            int scaledWidth,
+            int scaledHeight
+    ) {
+        // Pet Menu핑
+        if(Objects.equals(screen.getTitle().getString(), "Pet Menu\uEEE6\uEEE5\uEEE3핑")) {
+            Screens.getButtons(screen).add(ButtonWidget.builder(Text.literal("Pet Merge Calculator"), button -> {
+                        assert client.player != null;
+                        client.setScreen(new PetMergeCalculatorScreen(client.player, client.currentScreen));
+                    })
+                    .dimensions(scaledWidth / 2 - (130 / 2), scaledHeight / 2 + 120, 130, 20)
+                    .tooltip(Tooltip.of(Text.literal("Open up the screen to calculate pet merging.")))
+                    .build());
+        }
+    }
+
+    private void beforeScreenOpen(
+            MinecraftClient client,
+            Screen screen,
             int scaledWidth,
             int scaledHeight
     ) {
         menuOpened = true;
+
         ScreenEvents.remove(screen).register(removedScreen -> {
             menuOpened = false;
             lastMenuCloseTime = System.currentTimeMillis();
