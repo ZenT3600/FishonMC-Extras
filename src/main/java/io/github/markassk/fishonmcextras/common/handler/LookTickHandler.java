@@ -1,5 +1,6 @@
-package io.github.markassk.fishonmcextras.common.overlay;
+package io.github.markassk.fishonmcextras.common.handler;
 
+import io.github.markassk.fishonmcextras.common.overlay.RayTracing;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ItemFrameEntity;

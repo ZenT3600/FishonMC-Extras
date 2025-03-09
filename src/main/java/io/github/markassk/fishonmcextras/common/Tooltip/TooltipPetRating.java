@@ -25,18 +25,6 @@ public class TooltipPetRating {
         return 1;
     }
 
-    private static float clampRarity(float rating, String json) {
-        if (json.contains("ᴀᴡꜰᴜʟ")) return Math.clamp(rating, 0, 9);
-        else if (json.contains("ʙᴀᴅ")) return Math.clamp(rating, 10, 19);
-        else if (json.contains("ʙᴇʟᴏᴡ ᴀᴠᴇʀᴀɢᴇ")) return Math.clamp(rating, 20, 34);
-        else if (json.contains("ᴀᴠᴇʀᴀɢᴇ")) return Math.clamp(rating, 35, 49);
-        else if (json.contains("ɢᴏᴏᴅ")) return Math.clamp(rating, 50, 59);
-        else if (json.contains("ɢʀᴇᴀᴛ")) return Math.clamp(rating, 60, 79);
-        else if (json.contains("ᴇxᴄᴇʟʟᴇɴᴛ")) return Math.clamp(rating, 80, 89);
-        else if (json.contains("ᴀᴍᴀᴢɪɴɢ")) return Math.clamp(rating, 90, 99);
-        return rating;
-    }
-
     public static List<Text> appendTooltipRating(List<Text> textList) {
         FishOnMCExtrasConfig config = FishOnMCExtrasConfig.getConfig();
         if(textList.size() >= 3 && textList.get(1).getString().contains(" Pet") && textList.get(3).getString().contains(" ᴘᴇᴛ")) {
@@ -49,10 +37,10 @@ public class TooltipPetRating {
             float total = Stream.of(petClimateLuck, petClimateScale, petLocationLuck, petLocationScale).mapToInt(Integer::parseInt).sum();
 
             if (config.petTooltipToggles.showIndividualRating) {
-                Text petClimateLuckLine = appendRating(textList.get(9), Float.parseFloat(petClimateLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-                Text petClimateScaleLine = appendRating(textList.get(10), Float.parseFloat(petClimateScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-                Text petLocationLuckLine = appendRating(textList.get(13), Float.parseFloat(petLocationLuck), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
-                Text petLocationScaleLine = appendRating(textList.get(14), Float.parseFloat(petLocationScale), multiplier, 4, "\",\"italic\"", 3, textToJson(textList.get(16)), false);
+                Text petClimateLuckLine = appendRating(textList.get(9), Float.parseFloat(petClimateLuck), multiplier, 4, "\",\"italic\"", 3);
+                Text petClimateScaleLine = appendRating(textList.get(10), Float.parseFloat(petClimateScale), multiplier, 4, "\",\"italic\"", 3);
+                Text petLocationLuckLine = appendRating(textList.get(13), Float.parseFloat(petLocationLuck), multiplier, 4, "\",\"italic\"", 3);
+                Text petLocationScaleLine = appendRating(textList.get(14), Float.parseFloat(petLocationScale), multiplier, 4, "\",\"italic\"", 3);
 
                 textList.set(9, petClimateLuckLine);
                 textList.set(10, petClimateScaleLine);
@@ -61,7 +49,7 @@ public class TooltipPetRating {
             }
 
             if (config.petTooltipToggles.showFullRating) {
-                Text petRatingLine = appendRating(textList.get(16), total, multiplier, 1, "\",\"italic\"", 2, textToJson(textList.get(16)), true);
+                Text petRatingLine = appendRating(textList.get(16), total, multiplier, 1, "\",\"italic\"", 2);
 
                 textList.set(16, petRatingLine);
             }
@@ -99,7 +87,7 @@ public class TooltipPetRating {
                 }
 
                 if (config.petTooltipToggles.showFullRating) {
-                    petStrNew = builder.insert(ordinalIndexOf(petStrNew, "\\n", 16), " (" + String.format("%.0f", clampRarity(total / multiplier, petStr)) + "%)").toString();
+                    petStrNew = builder.insert(ordinalIndexOf(petStrNew, "\\n", 16), " (" + String.format("%.0f", (total / multiplier)) + "%)").toString();
                 }
                 return jsonToText(json.replace(petStr, petStrNew));
             }
@@ -107,10 +95,10 @@ public class TooltipPetRating {
         return jsonToText(json);
     }
 
-    private static Text appendRating(Text line, float rating, float rarityMultiplier, float extraMultiplier, String substr, int occurrence, String rarity, boolean clamp) {
+    private static Text appendRating(Text line, float rating, float rarityMultiplier, float extraMultiplier, String substr, int occurrence) {
         String json = textToJson(line);
         StringBuilder builder = new StringBuilder(json);
-        float ratingPercentage = clamp ? clampRarity(rating * extraMultiplier / rarityMultiplier, rarity) : rating * extraMultiplier / rarityMultiplier;
+        float ratingPercentage = rating * extraMultiplier / rarityMultiplier;
         String newJson = builder.insert(ordinalIndexOf(json, substr, occurrence), " (" + String.format("%.0f", ratingPercentage) + "%)").toString();
 
         return jsonToText(newJson);
