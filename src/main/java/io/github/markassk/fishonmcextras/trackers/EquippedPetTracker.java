@@ -13,6 +13,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
+import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 
 public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private static String currentPet = null;
@@ -26,22 +28,38 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     public static void initialize() {
         ClientReceiveMessageEvents.GAME.register(new EquippedPetTracker());
     }
+	
+	private String capitalizeFirstletter(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
 
     @Override
     public void onReceiveGameMessage(Text message, boolean overlay) {
         String rawMessage = message.getString();
 
+        FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
+
         Matcher equipMatcher = PET_EQUIP_PATTERN.matcher(rawMessage);
         Matcher unequipMatcher = PET_UNEQUIP_PATTERN.matcher(rawMessage);
 
-        NbtComponent component = MinecraftClient.getInstance().player.getMainHandStack().getItem().get(DataComponentTypes.CUSTOM_DATA);
-        int level = -1;
-        if (component != null) {
-            level = component.getNbt().getInt("level");
-        }
+        String level = "NaN";
+        String rarity = "NaN";
+		try {
+			NbtComponent component = MinecraftClient.getInstance().player.getMainHandStack().get(DataComponentTypes.CUSTOM_DATA);
+			if (component != null) {
+				level = String.valueOf(component.getNbt().getInt("level"));
+				rarity = component.getNbt().getString("rarity");
+			}
+		} catch (Exception e) {}	// Messages get sent during connection to the server.
+									// Not handling the exception would render your client
+									// unable to connect to the server.
         
         if (equipMatcher.find()) {
-            handlePetEquip(equipMatcher.group(1) + " [" + level + "]");
+			if (config.petActiveHUDConfig.petActiveVerbose) {
+				handlePetEquip(capitalizeFirstletter(rarity) + " " + equipMatcher.group(1) + " [lvl. " + level + "]");
+			} else {
+				handlePetEquip(equipMatcher.group(1));
+			}
         } else if (unequipMatcher.find()) {
             handlePetUnequip();
         }

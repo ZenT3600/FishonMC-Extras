@@ -119,6 +119,7 @@ public class FishOnMCExtrasConfig implements ConfigData {
     }
 
     public static class PetActiveHUDConfig{
+        public boolean petActiveVerbose = true;
         public boolean petActiveHUDShadows = true;
         @ConfigEntry.ColorPicker
         public int petActiveColor = 0x00FF00; // Green by default
