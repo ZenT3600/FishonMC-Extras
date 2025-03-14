@@ -59,6 +59,7 @@ public class HudRenderer implements HudRenderCallback {
         data.variantCounts = new HashMap<>(this.variantCounts);
         data.rarityCounts = new HashMap<>(this.rarityCounts);
         data.sizeCounts = new HashMap<>(this.sizeCounts);
+        data.newestFish = this.newestFish;
 
         data.activeTime = this.activeTime;
         data.lastFishCaughtTime = this.lastFishCaughtTime;
@@ -106,6 +107,7 @@ public class HudRenderer implements HudRenderCallback {
             this.variantCounts = data.variantCounts;
             this.rarityCounts = data.rarityCounts;
             this.sizeCounts = data.sizeCounts;
+            this.newestFish = data.newestFish;
 
             this.allFishCaughtCount = data.allFishCaughtCount;
             this.allTotalXP = data.allTotalXP;
@@ -140,6 +142,7 @@ public class HudRenderer implements HudRenderCallback {
         variantCounts.clear();
         rarityCounts.clear();
         sizeCounts.clear();
+        newestFish = null;
 
         activeTime = 0;
         lastFishCaughtTime = 0;
@@ -161,7 +164,7 @@ public class HudRenderer implements HudRenderCallback {
 
 
     // Updates whats shown on the HUD
-    public void updateFishHUD(float xp, float value, String variant, String rarity, String size) {
+    public void updateFishHUD(float xp, float value, String variant, String rarity, String size, String representation) {
         // Alltime caught
         this.allFishCaughtCount++;
         this.allTotalXP += xp;
@@ -180,6 +183,7 @@ public class HudRenderer implements HudRenderCallback {
         this.sizeCounts.put(size, sizeCounts.getOrDefault(size, 0) + 1);
         this.variantCounts.put(variant, variantCounts.getOrDefault(variant, 0) + 1);
         this.rarityCounts.put(rarity, rarityCounts.getOrDefault(rarity, 0) + 1);
+        this.newestFish = representation;
 
         this.saveStats();
     }
@@ -446,6 +450,9 @@ public class HudRenderer implements HudRenderCallback {
                         }
                     }
                 }
+
+                drawContext.drawText(textRenderer, "Latest Catch: " + this.newestFish, scaledX, scaledYHolder[0], config.fishHUDConfig.fishHUDColorConfig.fishHUDXPColor, shadows);
+                scaledYHolder[0] += lineHeight;
 
                 if (config.otherHUDToggles.showItemFrameTooltip) {
                     if(LookTickHandler.instance().targetedItem != null) {
