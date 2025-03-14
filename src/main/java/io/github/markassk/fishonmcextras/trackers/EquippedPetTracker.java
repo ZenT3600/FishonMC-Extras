@@ -10,16 +10,19 @@ import net.minecraft.item.Items;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Arrays;
 import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 
 public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private static String currentPet = null;
-	private static NbtCompound petNbt = null;
     private static long lastPetChangeTime = 0;
+	private static ItemStack petItem = null;
+	private static int petSlot = 0;
 
     private static final Pattern PET_EQUIP_PATTERN =
             Pattern.compile("PETS\\s*[»:]\\s*Equipped your (.+?)\\.?$", Pattern.CASE_INSENSITIVE);
@@ -37,10 +40,11 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     }
 	
 	public static void updateXp() {
-		if (petNbt != null) {
-			HudRenderer.setXpNeed(petNbt.getFloat("xp_need"));
-			HudRenderer.setXpCur(petNbt.getFloat("xp_cur"));
-		}
+		NbtCompound cNbt = MinecraftClient.getInstance().player.getInventory().getStack(petSlot).get(DataComponentTypes.CUSTOM_DATA).getNbt();
+		System.out.println(cNbt.toString());
+		
+		HudRenderer.setXpNeed(cNbt.getFloat("xp_need"));
+		HudRenderer.setXpCur(cNbt.getFloat("xp_cur"));
 	}
 
     @Override
@@ -53,14 +57,17 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
         Matcher unequipMatcher = PET_UNEQUIP_PATTERN.matcher(rawMessage);
         Matcher levelupMatcher = PET_LEVELUP_PATTERN.matcher(rawMessage);
 
-        String level = "NaN";
-        String rarity = "NaN";
+        String currentLevel = "NaN";
+        String currentRarity = "NaN";
+		ItemStack petItem = null;
 		try {
-			NbtComponent component = MinecraftClient.getInstance().player.getMainHandStack().get(DataComponentTypes.CUSTOM_DATA);
+			petItem = MinecraftClient.getInstance().player.getMainHandStack();
+			NbtComponent component = petItem.get(DataComponentTypes.CUSTOM_DATA);
+			System.out.println("DEBUG: SLOT: " + petSlot);
 			if (component != null) {
-				petNbt = component.getNbt();
-				level = String.valueOf(petNbt.getInt("level"));
-				rarity = petNbt.getString("rarity");
+				NbtCompound petNbt = component.getNbt();
+				currentLevel = String.valueOf(petNbt.getInt("level"));
+				currentRarity = petNbt.getString("rarity");
 			}
 		} catch (Exception e) {}	// Messages get sent during connection to the server.
 									// Not handling the exception would render your client
@@ -69,8 +76,9 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 		if (levelupMatcher.find() && config.petActiveHUDConfig.petActiveVerbose) {
 			handePetLevelup(levelupMatcher.group(1));
 		} else if (equipMatcher.find()) {
+			petSlot = MinecraftClient.getInstance().player.getInventory().getSlotWithStack(petItem);
 			if (config.petActiveHUDConfig.petActiveVerbose) {
-				handlePetEquip(capitalizeFirstletter(rarity) + " " + equipMatcher.group(1) + " [lvl. " + level + "]");
+				handlePetEquip(capitalizeFirstletter(currentRarity) + " " + equipMatcher.group(1) + " [lvl. " + currentLevel + "]");
 			} else {
 				handlePetEquip(equipMatcher.group(1));
 			}
