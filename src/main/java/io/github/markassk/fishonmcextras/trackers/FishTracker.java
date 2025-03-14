@@ -155,7 +155,7 @@ public class FishTracker {
                 nbt.getString("variant"),
                 nbt.getString("rarity"),
                 nbt.getString("size"),
-                c(nbt.getString("variant")) + " " + c(nbt.getString("rarity")) + " " + c(nbt.getString("size")) " " + c(nbt.getString("fish")) + " [$" + nbt.getFloat("value") + "]"
+                c(nbt.getString("variant")) + " " + c(nbt.getString("rarity")) + " " + c(nbt.getString("size")) + " " + c(nbt.getString("fish")) + " [$" + nbt.getFloat("value") + "]"
         );
     }
 
