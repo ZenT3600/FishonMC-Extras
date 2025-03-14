@@ -24,6 +24,8 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
             Pattern.compile("PETS\\s*[»:]\\s*Equipped your (.+?)\\.?$", Pattern.CASE_INSENSITIVE);
     private static final Pattern PET_UNEQUIP_PATTERN =
             Pattern.compile("PETS\\s*[»:]\\s*Pet unequipped!$", Pattern.CASE_INSENSITIVE);
+	private static final Pattern PET_LEVELUP_PATTERN =
+			Pattern.compile("PETS » Your .+ is now level \\[(.+?)\\]", Pattern.CASE_INSENSITIVE);
 
     public static void initialize() {
         ClientReceiveMessageEvents.GAME.register(new EquippedPetTracker());
@@ -41,6 +43,7 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 
         Matcher equipMatcher = PET_EQUIP_PATTERN.matcher(rawMessage);
         Matcher unequipMatcher = PET_UNEQUIP_PATTERN.matcher(rawMessage);
+        Matcher levelupMatcher = PET_LEVELUP_PATTERN.matcher(rawMessage);
 
         String level = "NaN";
         String rarity = "NaN";
@@ -54,7 +57,9 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 									// Not handling the exception would render your client
 									// unable to connect to the server.
         
-        if (equipMatcher.find()) {
+		if (levelupMatcher.find() && config.petActiveHUDConfig.petActiveVerbose) {
+			handePetLevelup(levelupMatcher.group(1));
+		} else if (equipMatcher.find()) {
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				handlePetEquip(capitalizeFirstletter(rarity) + " " + equipMatcher.group(1) + " [lvl. " + level + "]");
 			} else {
@@ -69,12 +74,22 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
         // Update to directly use HudRenderer's storage
         HudRenderer.setCurrentPet(petName.trim());
         lastPetChangeTime = System.currentTimeMillis();
+		currentPet = petName;
         FishOnMCExtrasClient.HUD_RENDERER.saveStats(); // Auto-save on change
     }
+	
+	private void handePetLevelup(String level) {
+		String previousPet = getCurrentPet();
+		handlePetUnequip();
+		
+		String newPet = previousPet.split(" \\[lvl\\.")[0] + " [lvl. " + level + "]";
+		handlePetEquip(newPet);
+	}
 
     private void handlePetUnequip() {
         HudRenderer.clearCurrentPet();
         lastPetChangeTime = System.currentTimeMillis();
+		currentPet = null;
         FishOnMCExtrasClient.HUD_RENDERER.saveStats(); // Auto-save on change
     }
 

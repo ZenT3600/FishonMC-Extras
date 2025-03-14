@@ -49,6 +49,9 @@
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showGigantic": "Show Gigantic",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showGigantic.@Tooltip[0]": "Enable or disable the display of gigantics.",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showGigantic.@Tooltip[1]": "This affects the HUD display.",
+  "text.autoconfig.fishonmcextras.option.fishHUDToggles.showLatestCatch": "Show latest catch.",
+  "text.autoconfig.fishonmcextras.option.fishHUDToggles.showLatestCatch.@Tooltip[1]": "Enable or disable the display of your latest catch.",
+  "text.autoconfig.fishonmcextras.option.fishHUDToggles.showLatestCatch.@Tooltip[1]": "This affects the HUD display.",
 
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showVariants.@PrefixText" : "Variant Options:",
   "text.autoconfig.fishonmcextras.option.fishHUDToggles.showVariants": "Show Variants",
@@ -128,6 +131,7 @@
 
   "text.autoconfig.fishonmcextras.option.petActiveHUDConfig" : "Active Pet HUD Config",
   "text.autoconfig.fishonmcextras.option.petActiveHUDConfig.petActiveHUDShadows" : "Text Shadows",
+  "text.autoconfig.fishonmcextras.option.petActiveHUDConfig.petActiveVerbose" : "Show or hide Pet level and xp.",
   "text.autoconfig.fishonmcextras.option.petActiveHUDConfig.petActiveHUDShadows.Tooltip[0]" : "Enable or disable text shadows.",
   "text.autoconfig.fishonmcextras.option.petActiveHUDConfig.petActiveHUDShadows.Tooltip[1]" : "This affects the HUD display.",
   "text.autoconfig.fishonmcextras.option.petActiveHUDConfig.petActiveColor" : "Color",

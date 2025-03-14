@@ -93,7 +93,8 @@ public class FishOnMCExtrasConfig implements ConfigData {
         public boolean showZombie = false;
         @ConfigEntry.Gui.Tooltip(count = 2)
         public boolean showUnique = false;
-
+        @ConfigEntry.Gui.Tooltip(count = 2)
+        public boolean showLatestCatch = false;
     }
 
     public static class OtherHUDToggles {
