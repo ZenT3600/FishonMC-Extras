@@ -452,6 +452,7 @@ public class HudRenderer implements HudRenderCallback {
                     }
                 }
 
+                scaledYHolder[0] += lineHeight;
                 drawContext.drawText(textRenderer, "Latest Catch: " + this.newestFish, scaledX, scaledYHolder[0], config.fishHUDConfig.fishHUDColorConfig.fishHUDXPColor, shadows);
                 scaledYHolder[0] += lineHeight;
 
