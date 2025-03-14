@@ -7,6 +7,7 @@ import io.github.markassk.fishonmcextras.common.handler.LookTickHandler;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
+import net.minecraft.util.Identifier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -49,6 +50,8 @@ public class HudRenderer implements HudRenderCallback {
 
     // Pet
     private static String currentPet = null;
+    private static float xp_cur = 0f;
+    private static float xp_need = 0f;
 
 
     // Stats to export converter
@@ -216,6 +219,14 @@ public class HudRenderer implements HudRenderCallback {
         currentPet = petName;
     }
 
+    public static void setXpNeed(float xp) {
+        xp_need = xp;
+    }
+
+    public static void setXpCur(float xp) {
+        xp_cur = xp;
+    }
+
     public static void clearCurrentPet() {
         currentPet = null;
     }
@@ -281,7 +292,17 @@ public class HudRenderer implements HudRenderCallback {
 
             // Draw pet text with configurable color
             context.drawText(textRenderer, text, scaledX, scaledY, config.petActiveHUDConfig.petActiveColor, config.petActiveHUDConfig.petActiveHUDShadows);
-
+			
+			if (config.petActiveHUDConfig.petActiveVerbose) {
+				// Draw pet xp
+				int lineHeight = (int) (textRenderer.fontHeight + (2 / scale));
+				Identifier barBackground = Identifier.of("minecraft", "textures/gui/sprites/hud/experience_bar_background.png");
+				Identifier barFilled = Identifier.of("minecraft", "textures/gui/sprites/hud/experience_bar_progress.png");
+				context.drawTexture(barBackground, scaledX, scaledY + lineHeight, 0, 0, 182, 5, 182, 5);
+				int pixels = (int) (182 / (xp_need / xp_cur));
+				pixels = pixels > 182 ? 182 : pixels;
+				context.drawTexture(barFilled, scaledX, scaledY + lineHeight, pixels, 5, 0, 0, pixels, 5, 182, 5);
+			}
         } finally {
             context.getMatrices().pop();
         }

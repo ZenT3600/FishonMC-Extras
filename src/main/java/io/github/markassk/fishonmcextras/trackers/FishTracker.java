@@ -8,6 +8,7 @@ import net.minecraft.item.Items;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
+import io.github.markassk.fishonmcextras.trackers.EquippedPetTracker;
 import java.util.*;
 
 public class FishTracker {
@@ -148,6 +149,7 @@ public class FishTracker {
     private void processFish(ItemStack stack) {
         NbtCompound nbt = getFishNbt(stack);
         if (nbt == null) return;
+		EquippedPetTracker.updateXp();
 
         hudRenderer.updateFishHUD(
                 nbt.getFloat("xp"),

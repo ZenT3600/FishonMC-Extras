@@ -18,6 +18,7 @@ import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 
 public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private static String currentPet = null;
+	private static NbtCompound petNbt = null;
     private static long lastPetChangeTime = 0;
 
     private static final Pattern PET_EQUIP_PATTERN =
@@ -34,6 +35,13 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 	private String capitalizeFirstletter(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
+	
+	public static void updateXp() {
+		if (petNbt != null) {
+			HudRenderer.setXpNeed(petNbt.getFloat("xp_need"));
+			HudRenderer.setXpCur(petNbt.getFloat("xp_cur"));
+		}
+	}
 
     @Override
     public void onReceiveGameMessage(Text message, boolean overlay) {
@@ -50,8 +58,9 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 		try {
 			NbtComponent component = MinecraftClient.getInstance().player.getMainHandStack().get(DataComponentTypes.CUSTOM_DATA);
 			if (component != null) {
-				level = String.valueOf(component.getNbt().getInt("level"));
-				rarity = component.getNbt().getString("rarity");
+				petNbt = component.getNbt();
+				level = String.valueOf(petNbt.getInt("level"));
+				rarity = petNbt.getString("rarity");
 			}
 		} catch (Exception e) {}	// Messages get sent during connection to the server.
 									// Not handling the exception would render your client
@@ -73,6 +82,7 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private void handlePetEquip(String petName) {
         // Update to directly use HudRenderer's storage
         HudRenderer.setCurrentPet(petName.trim());
+		updateXp();
         lastPetChangeTime = System.currentTimeMillis();
 		currentPet = petName;
         FishOnMCExtrasClient.HUD_RENDERER.saveStats(); // Auto-save on change
