@@ -9,6 +9,12 @@ A Minecraft mod that enhances your experience on FishOnMC with advanced tracking
 
 ---
 
+## 🍴 Fork Features
+- Active pet rarity display
+- Active pet level display and tracker
+- Active pet xp bar and tracker
+- Extra feautures are toggleable
+
 ## 📋 Features
 - Real-time fishing statistics tracking
 - Customizable HUD with:

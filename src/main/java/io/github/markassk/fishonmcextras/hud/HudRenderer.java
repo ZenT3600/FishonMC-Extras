@@ -299,7 +299,7 @@ public class HudRenderer implements HudRenderCallback {
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				// Draw pet xp
 				NumberFormat nf = NumberFormat.getCompactNumberInstance(Locale.UK, NumberFormat.Style.SHORT);
-				nf.setMinimumFractionDigits(1);
+				nf.setMinimumFractionDigits(0);
 				nf.setMaximumFractionDigits(3);
 				
 				int lineHeight = (int) (textRenderer.fontHeight + (2 / scale) + 2);
