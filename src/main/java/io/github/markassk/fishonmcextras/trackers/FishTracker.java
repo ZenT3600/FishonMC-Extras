@@ -141,6 +141,10 @@ public class FishTracker {
         return nbt != null && isPlayerCaught(nbt) && !trackedFishUids.contains(createFishUid(nbt));
     }
 
+    private String c(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
     private void processFish(ItemStack stack) {
         NbtCompound nbt = getFishNbt(stack);
         if (nbt == null) return;
@@ -151,7 +155,7 @@ public class FishTracker {
                 nbt.getString("variant"),
                 nbt.getString("rarity"),
                 nbt.getString("size"),
-                nbt.getString("variant") + " " + nbt.getString("rarity") + " " + nbt.getString("fish") + " (" + nbt.getString("scientific") + ") [" + nbt.getFloat("value") + "]"
+                c(nbt.getString("variant")) + " " + c(nbt.getString("rarity")) + " " + c(nbt.getString("size")) " " + c(nbt.getString("fish")) + " [$" + nbt.getFloat("value") + "]"
         );
     }
 
