@@ -17,8 +17,6 @@ import java.util.regex.Pattern;
 public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private static String currentPet = null;
     private static long lastPetChangeTime = 0;
-    private UUID playerUUID;
-    private String currentWorldId = "";
 
     private static final Pattern PET_EQUIP_PATTERN =
             Pattern.compile("PETS\\s*[»:]\\s*Equipped your (.+?)\\.?$", Pattern.CASE_INSENSITIVE);
