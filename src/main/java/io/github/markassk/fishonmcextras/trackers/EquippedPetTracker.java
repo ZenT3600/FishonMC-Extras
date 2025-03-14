@@ -77,6 +77,7 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 			handePetLevelup(levelupMatcher.group(1));
 		} else if (equipMatcher.find()) {
 			petSlot = MinecraftClient.getInstance().player.getInventory().getSlotWithStack(petItem);
+			updateXp();
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				handlePetEquip(capitalizeFirstletter(currentRarity) + " " + equipMatcher.group(1) + " [lvl. " + currentLevel + "]");
 			} else {

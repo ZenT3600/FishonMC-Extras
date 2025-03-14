@@ -21,6 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.text.ParseException;
 
 public class HudRenderer implements HudRenderCallback {
     private final MinecraftClient client = MinecraftClient.getInstance();
@@ -295,13 +298,27 @@ public class HudRenderer implements HudRenderCallback {
 			
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				// Draw pet xp
-				int lineHeight = (int) (textRenderer.fontHeight + (2 / scale));
+				NumberFormat nf = NumberFormat.getCompactNumberInstance(Locale.UK, NumberFormat.Style.SHORT);
+				nf.setMinimumFractionDigits(1);
+				nf.setMaximumFractionDigits(3);
+				
+				int lineHeight = (int) (textRenderer.fontHeight + (2 / scale) + 2);
 				Identifier barBackground = Identifier.of("minecraft", "textures/gui/sprites/hud/experience_bar_background.png");
 				Identifier barFilled = Identifier.of("minecraft", "textures/gui/sprites/hud/experience_bar_progress.png");
 				context.drawTexture(barBackground, scaledX, scaledY + lineHeight, 0, 0, 182, 5, 182, 5);
 				int pixels = (int) (182 / (xp_need / xp_cur));
 				pixels = pixels > 182 ? 182 : pixels;
 				context.drawTexture(barFilled, scaledX, scaledY + lineHeight, pixels, 5, 0, 0, pixels, 5, 182, 5);
+            
+				String xpText = nf.format(xp_cur) + " / " + nf.format(xp_need);
+				int textX = (int) (scaledX + (182 / 2) - (textRenderer.getWidth(xpText) / 2));
+				int textY = scaledY + lineHeight - 2;
+				/*
+				context.drawText(textRenderer, xpText, textX - 1, textY - 1, 0x000000, config.petActiveHUDConfig.petActiveHUDShadows);
+				context.drawText(textRenderer, xpText, textX + 1, textY + 1, 0x000000, config.petActiveHUDConfig.petActiveHUDShadows);
+				*/
+				context.drawText(textRenderer, xpText, textX, textY, 0xFFFFFF, config.petActiveHUDConfig.petActiveHUDShadows);
+				
 			}
         } finally {
             context.getMatrices().pop();
