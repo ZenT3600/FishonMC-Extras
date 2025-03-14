@@ -2,6 +2,7 @@ package io.github.markassk.fishonmcextras.hud;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.nbt.NbtCompound;
 
 public class FishStatsData {
     // Current session fishHUDConfig
@@ -14,6 +15,7 @@ public class FishStatsData {
     public long activeTime = 0;
     public long lastFishCaughtTime = 0;
     public boolean timerPaused = false;
+    public NbtCompound newestFish = null;
 
 
     // All-time fishHUDConfig
