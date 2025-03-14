@@ -31,6 +31,7 @@ public class HudRenderer implements HudRenderCallback {
     private Map<String, Integer> variantCounts = new HashMap<>();
     private Map<String, Integer> rarityCounts = new HashMap<>();
     private Map<String, Integer> sizeCounts = new HashMap<>();
+    private String newestFish = null;
 
     //Current active timer stats
     private long activeTime = 0;
