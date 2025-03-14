@@ -80,7 +80,9 @@ public class HudRenderer implements HudRenderCallback {
         data.allSizeCounts = new HashMap<>(this.allSizeCounts);
 
         data.equippedPet = currentPet;
-
+		data.xp_cur = xp_cur;
+		data.xp_need = xp_need;
+		
         return data;
     }
 
@@ -126,6 +128,8 @@ public class HudRenderer implements HudRenderCallback {
 
             if (data.equippedPet != null && !data.equippedPet.isEmpty()) {
                 currentPet = data.equippedPet;
+				xp_cur = data.xp_cur;
+				xp_need = data.xp_need;
                 System.out.println("[EXTRAS] Loaded saved pet: " + currentPet);
             }
 
