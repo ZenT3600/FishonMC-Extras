@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
 import io.github.markassk.fishonmcextras.common.handler.LookTickHandler;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
+import io.github.markassk.fishonmcextras.trackers.FishStreakTracker;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.util.Identifier;
@@ -78,6 +79,7 @@ public class HudRenderer implements HudRenderCallback {
         data.allVariantCounts = new HashMap<>(this.allVariantCounts);
         data.allRarityCounts = new HashMap<>(this.allRarityCounts);
         data.allSizeCounts = new HashMap<>(this.allSizeCounts);
+		data.trackedFish = FishStreakTracker.trackedFish;
 
         data.equippedPet = currentPet;
 		data.xp_cur = xp_cur;
@@ -117,6 +119,7 @@ public class HudRenderer implements HudRenderCallback {
             this.rarityCounts = data.rarityCounts;
             this.sizeCounts = data.sizeCounts;
             this.newestFish = data.newestFish;
+			FishStreakTracker.trackedFish = data.trackedFish;
 
             this.allFishCaughtCount = data.allFishCaughtCount;
             this.allTotalXP = data.allTotalXP;
@@ -154,6 +157,7 @@ public class HudRenderer implements HudRenderCallback {
         rarityCounts.clear();
         sizeCounts.clear();
         newestFish = null;
+		FishStreakTracker.trackedFish = new HashMap<String, Integer>();
 
         activeTime = 0;
         lastFishCaughtTime = 0;

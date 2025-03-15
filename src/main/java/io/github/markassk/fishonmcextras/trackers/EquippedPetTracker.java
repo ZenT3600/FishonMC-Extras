@@ -42,7 +42,6 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 	public static void updateXp() {
 		try {
 			NbtCompound cNbt = MinecraftClient.getInstance().player.getInventory().getStack(petSlot).get(DataComponentTypes.CUSTOM_DATA).getNbt();
-			System.out.println(cNbt.toString());
 			
 			HudRenderer.setXpNeed(cNbt.getFloat("xp_need"));
 			HudRenderer.setXpCur(cNbt.getFloat("xp_cur"));
@@ -65,7 +64,6 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 		try {
 			petItem = MinecraftClient.getInstance().player.getMainHandStack();
 			NbtComponent component = petItem.get(DataComponentTypes.CUSTOM_DATA);
-			System.out.println("DEBUG: SLOT: " + petSlot);
 			if (component != null) {
 				NbtCompound petNbt = component.getNbt();
 				currentLevel = String.valueOf(petNbt.getInt("level"));

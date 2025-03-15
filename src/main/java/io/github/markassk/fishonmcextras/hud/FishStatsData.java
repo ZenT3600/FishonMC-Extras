@@ -15,6 +15,7 @@ public class FishStatsData {
     public long lastFishCaughtTime = 0;
     public boolean timerPaused = false;
     public String newestFish = null;
+	public Map<String, Integer> trackedFish = new HashMap<>();
 
 
     // All-time fishHUDConfig

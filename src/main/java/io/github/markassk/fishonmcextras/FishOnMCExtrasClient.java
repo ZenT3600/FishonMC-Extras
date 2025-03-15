@@ -6,6 +6,7 @@ import io.github.markassk.fishonmcextras.common.handler.LookTickHandler;
 import io.github.markassk.fishonmcextras.common.screen.PetMergeCalculatorScreen;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.hud.HudRenderer;
+import io.github.markassk.fishonmcextras.trackers.FishStreakTracker;
 import io.github.markassk.fishonmcextras.trackers.FishTracker;
 import io.github.markassk.fishonmcextras.trackers.EquippedPetTracker;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -38,6 +39,7 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
 
 
     public static final HudRenderer HUD_RENDERER = new HudRenderer();
+    public static final FishStreakTracker FISH_STREAK = new FishStreakTracker();
     public static final FishTracker fishTracker = new FishTracker(HUD_RENDERER);
     private static boolean menuOpened = false;
     private static long lastMenuCloseTime = 0L;

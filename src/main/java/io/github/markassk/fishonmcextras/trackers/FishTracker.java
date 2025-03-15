@@ -9,6 +9,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
 import io.github.markassk.fishonmcextras.trackers.EquippedPetTracker;
+import io.github.markassk.fishonmcextras.trackers.FishStreakTracker;
 import java.util.*;
 
 public class FishTracker {
@@ -157,8 +158,11 @@ public class FishTracker {
                 nbt.getString("variant"),
                 nbt.getString("rarity"),
                 nbt.getString("size"),
-                c(nbt.getString("variant")) + " " + c(nbt.getString("rarity")) + " " + c(nbt.getString("size")) + " " + c(nbt.getString("fish")) + " [$" + nbt.getFloat("value") + "]"
+                c(nbt.getString("variant")) + " " + c(nbt.getString("rarity")) + " " + c(nbt.getString("size")) + " " + c(stack.getName().getString()) + " [$" + nbt.getFloat("value") + "]"
         );
+		
+		String fullFishData = nbt.getString("variant") + " " + nbt.getString("rarity") + " " + nbt.getString("size") + " " + stack.getName().getString();
+		FishStreakTracker.processFish(fullFishData);
     }
 
     public void reset() {

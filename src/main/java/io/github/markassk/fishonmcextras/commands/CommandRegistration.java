@@ -3,6 +3,7 @@ package io.github.markassk.fishonmcextras.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
 import io.github.markassk.fishonmcextras.hud.HudRenderer;
+import io.github.markassk.fishonmcextras.trackers.FishStreakTracker;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -11,6 +12,7 @@ import com.mojang.brigadier.arguments.*;
 
 public class CommandRegistration {
     private static final HudRenderer HUD_RENDERER = FishOnMCExtrasClient.HUD_RENDERER;
+    private static final FishStreakTracker FISH_STREAK = FishOnMCExtrasClient.FISH_STREAK;
 
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(ClientCommandManager.literal("foe")
@@ -32,20 +34,30 @@ public class CommandRegistration {
                             return 1;
                         })
                 )
-								.then(ClientCommandManager.literal("dry")
-												.executes(context -> {
-														String output = FISH_STREAK.returnMessage();
-														context.getSource().sendFeedback(
-																		Text.literal(output);
-														);
-														return 1
-												})
+				.then(ClientCommandManager.literal("dry")
+						.executes(context -> {
+							FISH_STREAK.showDrystreak(context);
+							return 1;
+						})
+				)
+				.then(ClientCommandManager.literal("track")
+						.then(ClientCommandManager.literal("add")
+								.then(ClientCommandManager.argument("keyword", StringArgumentType.string())
+										.executes(context -> {
+											FISH_STREAK.trackFish(context);
+											return 1;
+										})
 								)
-								.then(ClientCommandManager.literal("track")
-												.then(ClientCommandManager.argument("keyword", StringArgumentType.string())
-														.executes(FISH_STREAK::trackFish);
-												)
+						)
+						.then(ClientCommandManager.literal("delete")
+								.then(ClientCommandManager.argument("keyword", StringArgumentType.string())
+										.executes(context -> {
+											FISH_STREAK.deleteFish(context);
+											return 1;
+										})
 								)
+						)
+				)
         );
     }
 
