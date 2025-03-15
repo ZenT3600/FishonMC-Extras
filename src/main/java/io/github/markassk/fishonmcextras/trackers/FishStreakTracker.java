@@ -16,7 +16,7 @@ public class FishStreakTracker {
 	
 	public static void processFish(String fishCaught) {
 		trackedFish.forEach((fish, count) -> {
-			if (fishCaught.contains(fish)) reset(fish);
+			if (fishCaught.toLowerCase().contains(fish.toLowerCase())) reset(fish);
 			else increment(fish);
 		});
 	}
