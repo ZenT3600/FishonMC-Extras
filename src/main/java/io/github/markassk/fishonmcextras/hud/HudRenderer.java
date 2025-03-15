@@ -54,6 +54,7 @@ public class HudRenderer implements HudRenderCallback {
 
     // Pet
     private static String currentPet = null;
+	private static int petSlot = 0;
     private static float xp_cur = 0f;
     private static float xp_need = 0f;
 
@@ -82,6 +83,7 @@ public class HudRenderer implements HudRenderCallback {
 		data.trackedFish = FishStreakTracker.trackedFish;
 
         data.equippedPet = currentPet;
+		data.petSlot = petSlot;
 		data.xp_cur = xp_cur;
 		data.xp_need = xp_need;
 		
@@ -128,11 +130,11 @@ public class HudRenderer implements HudRenderCallback {
             this.allRarityCounts = data.allRarityCounts;
             this.allSizeCounts = data.allSizeCounts;
 
-
             if (data.equippedPet != null && !data.equippedPet.isEmpty()) {
                 currentPet = data.equippedPet;
 				xp_cur = data.xp_cur;
 				xp_need = data.xp_need;
+				petSlot = data.petSlot;
                 System.out.println("[EXTRAS] Loaded saved pet: " + currentPet);
             }
 
@@ -232,6 +234,10 @@ public class HudRenderer implements HudRenderCallback {
 
     public static void setXpNeed(float xp) {
         xp_need = xp;
+    }
+
+    public static void setPetSlot(int slot) {
+        petSlot = slot;
     }
 
     public static void setXpCur(float xp) {

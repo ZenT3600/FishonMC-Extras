@@ -43,8 +43,10 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 		try {
 			NbtCompound cNbt = MinecraftClient.getInstance().player.getInventory().getStack(petSlot).get(DataComponentTypes.CUSTOM_DATA).getNbt();
 			
-			HudRenderer.setXpNeed(cNbt.getFloat("xp_need"));
-			HudRenderer.setXpCur(cNbt.getFloat("xp_cur"));
+			if (!(cNbt.getFloat("xp_cur") == 0 && cNbt.getFloat("xp_need") == 0)) {
+				HudRenderer.setXpNeed(cNbt.getFloat("xp_need"));
+				HudRenderer.setXpCur(cNbt.getFloat("xp_cur"));
+			}
 		} catch (Exception e) {} 
 	}
 
@@ -77,6 +79,7 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 			handePetLevelup(levelupMatcher.group(1));
 		} else if (equipMatcher.find()) {
 			petSlot = MinecraftClient.getInstance().player.getInventory().getSlotWithStack(petItem);
+			HudRenderer.setPetSlot(petSlot);
 			updateXp();
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				handlePetEquip(capitalizeFirstletter(currentRarity) + " " + equipMatcher.group(1) + " [lvl. " + currentLevel + "]");

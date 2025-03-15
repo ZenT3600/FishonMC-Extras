@@ -28,6 +28,7 @@ public class FishStatsData {
 
     // Current pet
     public String equippedPet = null;
+    public int petSlot = 0;
     public float xp_cur = 0f;
     public float xp_need = 0f;
 }
