@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
+import com.mojang.brigadier.arguments.*;
 
 public class CommandRegistration {
     private static final HudRenderer HUD_RENDERER = FishOnMCExtrasClient.HUD_RENDERER;
@@ -31,7 +32,20 @@ public class CommandRegistration {
                             return 1;
                         })
                 )
-
+								.then(ClientCommandManager.literal("dry")
+												.executes(context -> {
+														String output = FISH_STREAK.returnMessage();
+														context.getSource().sendFeedback(
+																		Text.literal(output);
+														);
+														return 1
+												})
+								)
+								.then(ClientCommandManager.literal("track")
+												.then(ClientCommandManager.argument("keyword", StringArgumentType.string())
+														.executes(FISH_STREAK::trackFish);
+												)
+								)
         );
     }
 
