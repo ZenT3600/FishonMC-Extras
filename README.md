@@ -14,6 +14,7 @@ A Minecraft mod that enhances your experience on FishOnMC with advanced tracking
 - Active pet level display and tracker
 - Active pet xp bar and tracker
 - New client-side commands to track your drystreaks (/foe dry, /foe track)
+- Inventory getting full warning
 - Extra feautures are toggleable
 
 ## 📋 Features
@@ -51,7 +52,6 @@ Access config screen via:
 - Shards tracking (with hourly rate)
 - Quest HUD (Tracker for rewards & completions, No quest Warning)
 - Crew Quest HUD (Maybe)
-- Inventory getting full, 3 slot warning
 - Event timer
 - popup screen for variants
 - Moveable scoreboard replacement
