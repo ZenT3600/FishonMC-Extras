@@ -29,6 +29,14 @@
   "text.autoconfig.fishonmcextras.option.otherHUDToggles.showItemFrameTooltip": "Show tooltip on Item frame hover",
   "text.autoconfig.fishonmcextras.option.otherHUDToggles.showItemFrameTooltip.@Tooltip": "Enable or disable the tooltip on hovering an Item frame with a FishOnMC item.",
 
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.@PrefixText" : "Inventory Warning Options:",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles" : "Inventory Warning Toggles",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.on" : "Enable",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.remainingSlots" : "Minimum Empty Slots",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.delayTps" : "Inventory Check Delay",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.delayTps.@Tooltip[0]": "This is measured with In-Game tps.",
+  "text.autoconfig.fishonmcextras.option.InventoryWarningToggles.delayTps.@Tooltip[1]": "Higher is longer.",
+
   "text.autoconfig.fishonmcextras.option.petTooltipToggles.@PrefixText" : "Pet Tooltip Options:",
   "text.autoconfig.fishonmcextras.option.petTooltipToggles": "Pet Tooltip Toggles",
   "text.autoconfig.fishonmcextras.option.petTooltipToggles.showFullRating": "Show pet percentage rating",
@@ -112,6 +120,11 @@
   "text.autoconfig.fishonmcextras.option.fishHUDConfig.fishHUDColorConfig.fishHUDValueColor" : "Value color",
   "text.autoconfig.fishonmcextras.option.fishHUDConfig.fishHUDColorConfig.fishHUDUniqueColor" : "Unique Variant Color",
 
+  "text.autoconfig.fishonmcextras.option.InventoryHUDConfig" : "Inventory Warning Config",
+  "text.autoconfig.fishonmcextras.option.InventoryHUDConfig.flashWarning" : "Warning flashes",
+  "text.autoconfig.fishonmcextras.option.InventoryHUDConfig.inventoryWarningShadows" : "Text Shadows",
+  "text.autoconfig.fishonmcextras.option.InventoryHUDConfig.warningColor" : "Warning color",
+  "text.autoconfig.fishonmcextras.option.InventoryHUDConfig.warningFontSize" : "Warning Size",
 
   "text.autoconfig.fishonmcextras.option.petWarningHUDConfig" : "Pet Warning HUD Config",
   "text.autoconfig.fishonmcextras.option.petWarningHUDConfig.enableWarning" : "Unequipped pet warning",

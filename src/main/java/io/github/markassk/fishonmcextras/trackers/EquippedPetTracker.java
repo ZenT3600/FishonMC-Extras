@@ -102,6 +102,7 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 	
 	private void handePetLevelup(String level) {
 		String previousPet = getCurrentPet();
+		if (previousPet == null) return;
 		handlePetUnequip();
 		
 		String newPet = previousPet.split(" \\[lvl\\.")[0] + " [lvl. " + level + "]";

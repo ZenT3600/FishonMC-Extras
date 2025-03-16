@@ -6,6 +6,7 @@ import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
 import io.github.markassk.fishonmcextras.common.handler.LookTickHandler;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.trackers.FishStreakTracker;
+import io.github.markassk.fishonmcextras.trackers.InventoryFullTracker;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 import net.minecraft.util.Identifier;
@@ -57,6 +58,9 @@ public class HudRenderer implements HudRenderCallback {
 	private static int petSlot = 0;
     private static float xp_cur = 0f;
     private static float xp_need = 0f;
+	
+	// Inventory
+	private static int emptySlots = 50;
 
 
     // Stats to export converter
@@ -248,18 +252,18 @@ public class HudRenderer implements HudRenderCallback {
         currentPet = null;
     }
 
+    public static void setEmptySlots(int count) {
+        emptySlots = count;
+    }
+
     // In HudRenderer.java
-
-    private void renderNoPetWarning(DrawContext context) {
-        FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
-        if (!config.petWarningHUDConfig.enableWarning || currentPet != null) return;
-
-        TextRenderer textRenderer = client.textRenderer;
-        String warningText = "NO PET EQUIPPED!";
-
-        context.getMatrices().push();
+	
+	private void renderGenericWarning(DrawContext context, String text, int color, boolean shadows, boolean flashing, float size) {
+		TextRenderer textRenderer = client.textRenderer;
+		
+		context.getMatrices().push();
         try {
-            float scale = config.petWarningHUDConfig.warningFontSize / 10f;
+            float scale = size / 10f;
             context.getMatrices().scale(scale, scale, 1f);
 
             // Gets screen size
@@ -267,23 +271,34 @@ public class HudRenderer implements HudRenderCallback {
             int screenHeight = client.getWindow().getScaledHeight();
 
             // Position calculation
-            int textWidth = textRenderer.getWidth(warningText);
+            int textWidth = textRenderer.getWidth(text);
             int x = (int) (((float) screenWidth / 2 - textWidth * scale / 2) / scale);
             int y = (int) ((screenHeight - 100) / scale);
 
             // Flashing effect
-            int color = config.petWarningHUDConfig.warningColor;
-            if (config.petWarningHUDConfig.flashWarning) {
+            if (flashing) {
                 float alpha = (float) (Math.sin(System.currentTimeMillis() / 200.0) * 0.5 + 0.5);
                 color = (color & 0x00FFFFFF) | ((int) (alpha * 255) << 24);
             }
 
-            context.drawText(textRenderer, warningText, x, y, color, config.petWarningHUDConfig.petWarningHUDShadows);
+            context.drawText(textRenderer, text, x, y, color, shadows);
         } finally {
             context.getMatrices().pop();
         }
-    }
+	}
+	
+	private void renderFullInventoryWarning(DrawContext context) {
+        FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
+        if (!config.InventoryWarningToggles.on) return;
+		renderGenericWarning(context, "INVENTORY ALMOST FULL!", config.InventoryHUDConfig.warningColor, config.InventoryHUDConfig.inventoryWarningShadows, config.InventoryHUDConfig.flashWarning, config.InventoryHUDConfig.warningFontSize);
+	}
 
+    private void renderNoPetWarning(DrawContext context) {
+        FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
+        if (!config.petWarningHUDConfig.enableWarning || currentPet != null) return;
+		renderGenericWarning(context, "NO PET EQUIPPED!", config.petWarningHUDConfig.warningColor, config.petWarningHUDConfig.petWarningHUDShadows, config.petWarningHUDConfig.flashWarning, config.petWarningHUDConfig.warningFontSize);
+    }
+ 
     private void renderCurrentPet(DrawContext context) {
         if (currentPet == null) return;
 
@@ -526,5 +541,12 @@ public class HudRenderer implements HudRenderCallback {
                 renderCurrentPet(drawContext);
             }
         }
+		
+		if(config.InventoryWarningToggles.on) {
+			InventoryFullTracker.ping();
+			if (emptySlots <= config.InventoryWarningToggles.remainingSlots) {
+				renderFullInventoryWarning(drawContext);
+			}
+		}
     }
 }

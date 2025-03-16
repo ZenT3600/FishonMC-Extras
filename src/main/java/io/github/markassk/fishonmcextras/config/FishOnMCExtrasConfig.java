@@ -40,6 +40,12 @@ public class FishOnMCExtrasConfig implements ConfigData {
     @ConfigEntry.Category(value = "general")
     @ConfigEntry.Gui.CollapsibleObject
     public PetTooltipToggles petTooltipToggles = new PetTooltipToggles();
+	
+	// Inventory Warning Options
+	@ConfigEntry.Gui.PrefixText
+	@ConfigEntry.Category(value = "general")
+	@ConfigEntry.Gui.CollapsibleObject
+	public InventoryWarningToggles InventoryWarningToggles = new InventoryWarningToggles();
 
 
     // ----------- HUD Styling -----------
@@ -54,6 +60,10 @@ public class FishOnMCExtrasConfig implements ConfigData {
     @ConfigEntry.Category(value = "textStyling")
     @ConfigEntry.Gui.CollapsibleObject
     public PetActiveHUDConfig petActiveHUDConfig = new PetActiveHUDConfig();
+
+    @ConfigEntry.Category(value = "textStyling")
+    @ConfigEntry.Gui.CollapsibleObject
+    public InventoryHUDConfig InventoryHUDConfig = new InventoryHUDConfig();
 
 
 
@@ -102,6 +112,13 @@ public class FishOnMCExtrasConfig implements ConfigData {
         public boolean showItemFrameTooltip = true;
     }
 
+    public static class InventoryWarningToggles {
+        public boolean on = true;
+        public int remainingSlots = 3;
+        @ConfigEntry.Gui.Tooltip(count = 2)
+        public int delayTps = 20;
+    }
+
     public static class PetTooltipToggles {
         @ConfigEntry.Gui.Tooltip()
         public boolean showFullRating = true;
@@ -113,6 +130,15 @@ public class FishOnMCExtrasConfig implements ConfigData {
         public boolean enableWarning = true;
         public boolean flashWarning = true;
         public boolean petWarningHUDShadows = true;
+        @ConfigEntry.ColorPicker
+        public int warningColor = 0xFF0000; // Red by default
+        @ConfigEntry.BoundedDiscrete(min = 10, max = 40)
+        public int warningFontSize = 18;
+    }
+
+    public static class InventoryHUDConfig{
+        public boolean flashWarning = true;
+        public boolean inventoryWarningShadows = true;
         @ConfigEntry.ColorPicker
         public int warningColor = 0xFF0000; // Red by default
         @ConfigEntry.BoundedDiscrete(min = 10, max = 40)
