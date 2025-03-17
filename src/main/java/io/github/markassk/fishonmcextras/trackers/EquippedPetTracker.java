@@ -17,12 +17,16 @@ import java.util.regex.Pattern;
 import java.util.Arrays;
 import io.github.markassk.fishonmcextras.FishOnMCExtrasClient;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
+import io.github.markassk.fishonmcextras.common.util.MinecraftHelper;
 
 public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     private static String currentPet = null;
     private static long lastPetChangeTime = 0;
 	private static ItemStack petItem = null;
 	private static int petSlot = 0;
+	
+	private static HudRenderer renderer = FishOnMCExtrasClient.HUD_RENDERER;
+	private static FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
 
     private static final Pattern PET_EQUIP_PATTERN =
             Pattern.compile("PETS\\s*[»:]\\s*Equipped your (.+?)\\.?$", Pattern.CASE_INSENSITIVE);
@@ -41,11 +45,12 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 	
 	public static void updateXp() {
 		try {
-			NbtCompound cNbt = MinecraftClient.getInstance().player.getInventory().getStack(petSlot).get(DataComponentTypes.CUSTOM_DATA).getNbt();
-			
+			ItemStack cStack = MinecraftHelper.getPlayerSlot(petSlot);
+			NbtCompound cNbt = MinecraftHelper.getNbt(cStack);
+			if (cNbt == null) return;
 			if (!(cNbt.getFloat("xp_cur") == 0 && cNbt.getFloat("xp_need") == 0)) {
-				HudRenderer.setXpNeed(cNbt.getFloat("xp_need"));
-				HudRenderer.setXpCur(cNbt.getFloat("xp_cur"));
+				renderer.setXpNeed(cNbt.getFloat("xp_need"));
+				renderer.setXpCur(cNbt.getFloat("xp_cur"));
 			}
 		} catch (Exception e) {} 
 	}
@@ -53,8 +58,6 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
     @Override
     public void onReceiveGameMessage(Text message, boolean overlay) {
         String rawMessage = message.getString();
-
-        FishOnMCExtrasConfig config = FishOnMCExtrasClient.CONFIG;
 
         Matcher equipMatcher = PET_EQUIP_PATTERN.matcher(rawMessage);
         Matcher unequipMatcher = PET_UNEQUIP_PATTERN.matcher(rawMessage);
@@ -64,13 +67,11 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
         String currentRarity = "NaN";
 		ItemStack petItem = null;
 		try {
-			petItem = MinecraftClient.getInstance().player.getMainHandStack();
-			NbtComponent component = petItem.get(DataComponentTypes.CUSTOM_DATA);
-			if (component != null) {
-				NbtCompound petNbt = component.getNbt();
-				currentLevel = String.valueOf(petNbt.getInt("level"));
-				currentRarity = petNbt.getString("rarity");
-			}
+			petItem = MinecraftHelper.getPlayer().getMainHandStack();
+			NbtCompound petNbt = MinecraftHelper.getNbt(petItem);
+			if (petNbt == null) return;
+			currentLevel = String.valueOf(petNbt.getInt("level"));
+			currentRarity = petNbt.getString("rarity");
 		} catch (Exception e) {}	// Messages get sent during connection to the server.
 									// Not handling the exception would render your client
 									// unable to connect to the server.
@@ -78,8 +79,8 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 		if (levelupMatcher.find() && config.petActiveHUDConfig.petActiveVerbose) {
 			handePetLevelup(levelupMatcher.group(1));
 		} else if (equipMatcher.find()) {
-			petSlot = MinecraftClient.getInstance().player.getInventory().getSlotWithStack(petItem);
-			HudRenderer.setPetSlot(petSlot);
+			petSlot = MinecraftHelper.getPlayerInventory().getSlotWithStack(petItem);
+			renderer.setPetSlot(petSlot);
 			updateXp();
 			if (config.petActiveHUDConfig.petActiveVerbose) {
 				handlePetEquip(capitalizeFirstletter(currentRarity) + " " + equipMatcher.group(1) + " [lvl. " + currentLevel + "]");
@@ -93,11 +94,11 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 
     private void handlePetEquip(String petName) {
         // Update to directly use HudRenderer's storage
-        HudRenderer.setCurrentPet(petName.trim());
+        renderer.setCurrentPet(petName.trim());
 		updateXp();
         lastPetChangeTime = System.currentTimeMillis();
 		currentPet = petName;
-        FishOnMCExtrasClient.HUD_RENDERER.saveStats(); // Auto-save on change
+        renderer.saveStats(); // Auto-save on change
     }
 	
 	private void handePetLevelup(String level) {
@@ -110,10 +111,10 @@ public class EquippedPetTracker implements ClientReceiveMessageEvents.Game {
 	}
 
     private void handlePetUnequip() {
-        HudRenderer.clearCurrentPet();
+        renderer.clearCurrentPet();
         lastPetChangeTime = System.currentTimeMillis();
 		currentPet = null;
-        FishOnMCExtrasClient.HUD_RENDERER.saveStats(); // Auto-save on change
+        renderer.saveStats(); // Auto-save on change
     }
 
     public static String getCurrentPet() {
